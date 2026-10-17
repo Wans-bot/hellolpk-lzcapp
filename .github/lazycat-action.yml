@@ -31,8 +31,10 @@ build:
 images: []
 
 stores:
-  # 应用 cloud.lazycat.app.hellolpk 已建档、1.0.0 已在审核中（#20754），
-  # 因此 create_if_missing 必须为 false，也不能带 application 元数据块。
+  # 应用 cloud.lazycat.app.hellolpk 的建档记录曾丢失（check/exist 变回 false，
+  # 导致发布报 upstream=NOT_FOUND），重建后 id=6848。配置校验要求 application 块
+  # 只能与 create_if_missing: true 同时出现，所以这里保持 true；记录已存在时
+  # create 会被跳过，不影响幂等。
   official:
     enabled: true
     continue_if_newer_version: true
