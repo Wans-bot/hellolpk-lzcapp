@@ -37,8 +37,10 @@ stores:
     enabled: true
     continue_if_newer_version: true
     skip_if_version_exists: true
-    create_if_missing: false
-    # 应用信息（建档时必填的那部分）。没有这个块，HasSubmissionInfo() 为 false，
+    create_if_missing: true
+    # 应用信息（建档时必填的那部分）。配置校验要求 application 块只能与
+    # create_if_missing: true 同时出现；记录已存在时 create 会被跳过，信息仍会被上传。
+    # 没有这个块，HasSubmissionInfo() 为 false，
     # Action 会跳过应用信息上传，review/create 就被服务端拒成
     # 「应用信息至少需要支持桌面端或移动端之一」。
     application:
