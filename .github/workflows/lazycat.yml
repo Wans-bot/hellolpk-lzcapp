@@ -36,6 +36,10 @@ jobs:
       operation: ${{ inputs.operation || 'auto' }}
       config: .github/lazycat-action.yml
       dry-run: ${{ inputs.dry-run || false }}
+      # 必须与 config 的 build.toolchains 声明一致，否则 Action 报
+      # CONFIG_INVALID: workflow toolchains do not match Action configuration
+      toolchains: node
+      node-version: "22"
       versioned-release-asset: true
     secrets:
       # 本仓库用 lzc-cli 会话 token（X-User-Token 协议）而非开发者中心 PAT，
