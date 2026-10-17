@@ -59,6 +59,16 @@ stores:
       source_author: Wans
       support_pc: true
       support_mobile: true
+      # 校验规则：support_pc 要求 ≥2 张 PC 图，support_mobile 要求 ≥3 张移动图
+      # （internal/config/load.go 的 validateOfficialApplication）。路径相对 project.root。
+      screenshot_pc_files:
+        - docs/screenshots/pc/pc-01-initial.png
+        - docs/screenshots/pc/pc-02-saved.png
+        - docs/screenshots/pc/pc-03-copied.png
+      screenshot_mobile_files:
+        - docs/screenshots/mobile/mob-01-initial.png
+        - docs/screenshots/mobile/mob-02-saved.png
+        - docs/screenshots/mobile/mob-03-copied.png
     changelog_locales: [zh, en]
   private:
     enabled: false
