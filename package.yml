@@ -1,5 +1,5 @@
 package: cloud.lazycat.app.hellolpk
-version: 1.0.0
+version: 1.0.1
 name: 环境探针
 description: 一键读取浏览器与网关的真实运行环境，附带可持久化的本地便签，用于确认应用部署状态。
 author: wans
