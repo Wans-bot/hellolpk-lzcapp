@@ -1,0 +1,46 @@
+# buildscript
+# - 可以为构建脚本的路径地址
+# - 如果构建命令简单，也可以直接写 sh 的命令
+buildscript: npm install && npm run build
+
+# manifest: 指定 lpk 包的 manifest.yml 文件路径
+manifest: ./lzc-manifest.yml
+
+# contentdir: 指定打包的内容，将会打包到 lpk 中
+contentdir: ./dist
+
+# images: 在盒子侧构建镜像并写入 lpk v2 images 目录
+# - key 是 image alias
+# - 在 lzc-manifest.yml 中通过 embed:alias 引用
+# - dockerfile 与 dockerfile-content 二选一
+# - context 可选，默认是 dockerfile 所在目录
+# images: 在盒子侧构建镜像并写入 lpk v2 images 目录
+# - key 是 image alias
+# - 在 lzc-manifest.yml 中通过 embed:alias 引用
+# - dockerfile 与 dockerfile-content 二选一
+# - context 可选，默认是 dockerfile 所在目录
+# images:
+#   my-nginx:
+#     context: ./image
+#     dockerfile: ./image/Dockerfile
+#     # 可选，默认 registry.lazycat.cloud
+#     upstream-match: registry.lazycat.cloud
+#   other-image:
+#     dockerfile: ./other/Dockerfile
+#   inline-image:
+#     context: ./
+#     dockerfile-content: |
+#       FROM alpine:3.20
+#       RUN echo "hello"
+#
+# 构建时默认是混合模式:
+# - 先沿父镜像链向上找 upstream
+# - 找到 upstream 后，仅 embed 非 upstream 的 layers
+# - 如果未匹配到 upstream，则自动全量 embed
+
+# pkgout: lpk 包的输出路径
+pkgout: ./out
+
+# icon 指定 lpk 包 icon 的路径路径，如果不指定将会警告
+# icon 仅仅允许 png 后缀的文件
+icon: ./lzc-icon.png

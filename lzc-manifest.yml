@@ -1,0 +1,48 @@
+application:
+  subdomain: hellolpk # 默认访问子域名前缀
+#@build if env.DEV_MODE=1
+  injects:
+    - id: frontend-dev-proxy
+      on: request
+      auth_required: false
+      when:
+        - "/*"
+      do:
+        - src: |
+            const devPort = 3000;
+            #@build include ./manifest.dev.page.js
+
+            if (!ctx.dev.id) {
+              ctx.response.send(200, renderDevPage("not_linked", devPort));
+              return;
+            }
+
+            const via = ctx.net.via.client(ctx.dev.id);
+            if (!ctx.dev.online()) {
+              ctx.response.send(200, renderDevPage("offline", devPort));
+              return;
+            }
+
+            if (!ctx.net.reachable("tcp", "127.0.0.1", devPort, via)) {
+              ctx.response.send(200, renderDevPage("not_ready", devPort));
+              return;
+            }
+
+            ctx.proxy.to("http://127.0.0.1:" + String(devPort), {
+              via: via,
+              use_target_host: true,
+            });
+#@build else
+  routes:
+    - /=file:///lzcapp/pkg/content/dist
+#@build end
+
+usage: |
+  打开应用即可看到当前设备的运行环境信息，包括访问域名、客户端平台、浏览器与版本、
+  视口与屏幕尺寸、语言与时区、网络状态。
+
+  页面下方的本地便签可以写入文字并保存，内容存放在浏览器本地，刷新页面或重启应用后仍然保留，
+  每次保存会显示保存时间。
+
+  「重新读取」按钮用于在改变窗口大小或网络状态后刷新环境信息；
+  「复制全部信息」按钮会把当前环境信息整理成 JSON 复制到剪贴板。

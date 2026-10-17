@@ -1,0 +1,43 @@
+# LazyCat GitHub Action 配置：hellolpk 的 LPK 自动构建与官方商店更新
+#
+# 与 tracearr/twikoo 那批「跟随上游镜像」的仓库不同，hellolpk 是自研源码工程、没有上游镜像，
+# 所以 version_source 用 git：版本由本仓库的 tag 决定，tag v1.0.1 就产出 1.0.1。
+# 两个决定仍然分开：version_source 决定 package.yml 的版本，images[] 决定 Manifest 里改哪些 image
+# 字段 —— 本工程没有镜像，images 保持为空。
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  # 必须是固定文件名且以 .lpk 结尾：Action 用它做校验与 Release 资产，
+  # 不要写成 dist/*.lpk 这种随版本变化的名字。
+  output: out/hellolpk.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: git
+
+build:
+  toolchains:
+    - kind: node
+      version: "22"
+  # buildscript 是 lzc-build.yml 里的 `npm install && npm run build`，产出 dist/ 静态资源
+  run_buildscript: true
+
+images: []
+
+stores:
+  # 应用 cloud.lazycat.app.hellolpk 已建档、1.0.0 已在审核中（#20754），
+  # 因此 create_if_missing 必须为 false，也不能带 application 元数据块。
+  official:
+    enabled: true
+    continue_if_newer_version: true
+    skip_if_version_exists: true
+    create_if_missing: false
+    changelog_locales: [zh, en]
+  private:
+    enabled: false
